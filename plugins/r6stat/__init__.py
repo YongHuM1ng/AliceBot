@@ -6,8 +6,9 @@ import aiohttp
 from PIL import Image
 from alicebot import Plugin
 from alicebot.adapter.cqhttp.event import GroupMessageEvent
+from alicebot.adapter.cqhttp.message import CQHTTPMessageSegment
 
-from draw import draw_img
+from .draw import draw_img
 
 file_path = f'{os.path.dirname(__file__)}/'
 empty_season = {
@@ -77,12 +78,12 @@ class R6Stat(Plugin[GroupMessageEvent, int, None]):
             else:
                 avatar.save(f'{file_path}cache/{data["name"]}.png')
 
-        casual_img = self.get_avatar(season1)
-        rank_img = self.get_avatar(season2)
+        casual_img = await self.get_avatar(season1)
+        rank_img = await self.get_avatar(season2)
 
-        await draw_img(data, season1, season2, avatar, casual_img, rank_img)
-
-
+        await self.event.reply(CQHTTPMessageSegment.image(
+            await draw_img(data, season1, season2, avatar, casual_img, rank_img)
+        ))
 
     async def rule(self) -> bool:
         return (
@@ -92,7 +93,7 @@ class R6Stat(Plugin[GroupMessageEvent, int, None]):
         )
 
     @staticmethod
-    def get_avatar(season: dict):
+    async def get_avatar(season: dict):
         if os.path.exists(f'{file_path}cache/{season["rankName"]}.png'):
             img = Image.open(f'{file_path}cache/{season["rankName"]}.png').convert('RGBA')
         else:
