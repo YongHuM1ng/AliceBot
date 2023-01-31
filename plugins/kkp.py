@@ -2,7 +2,7 @@ from alicebot import Plugin
 from alicebot.adapter.cqhttp.event import GroupMessageEvent
 
 
-class Test(Plugin[GroupMessageEvent, int, None]):
+class Kkp(Plugin[GroupMessageEvent, int, None]):
     async def handle(self) -> None:
         await self.event.reply('不理你啦！バーカー')
 
