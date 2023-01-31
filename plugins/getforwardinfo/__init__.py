@@ -17,9 +17,9 @@ class GetForwardInfo(Plugin[GroupMessageEvent, int, None]):
         if not forward_msg:
             self.skip()
         msg_list = {}
-        for i in forward_msg['messages']:
-            if i['sender']['user_id'] not in msg_list:
-                msg_list[i["sender"]["user_id"]] = i["sender"]["nickname"]
+
+        self.__data_handle(forward_msg['messages'], msg_list)
+
         msg_str = ''.join(f'{i}: {msg_list[i]}\n' for i in msg_list)
         msg_str = msg_str[:-1]
         group_id = forward_msg['messages'][0]['group_id']
@@ -44,3 +44,15 @@ class GetForwardInfo(Plugin[GroupMessageEvent, int, None]):
                 and self.event.message.endswith('获取详细信息')
                 and 'reply' in self.event.message
         )
+
+    @staticmethod
+    def __data_handle(data: list, msg_list: dict):
+        for i in data:
+            for j in i['content']:
+                if 'content' in j:
+                    if i['sender']['user_id'] not in msg_list:
+                        msg_list[i["sender"]["user_id"]] = i["sender"]["nickname"]
+                    if j['sender']['user_id'] not in msg_list:
+                        msg_list[j["sender"]["user_id"]] = j["sender"]["nickname"]
+                    if len(i['content']) != 1:
+                        GetForwardInfo.__data_handle(i['content'], msg_list)
