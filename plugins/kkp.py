@@ -11,5 +11,5 @@ class Kkp(Plugin[GroupMessageEvent, int, None]):
                 self.event.adapter.name == "cqhttp"
                 and self.event.type == "message"
                 and str(self.event.message) == 'kkp'
-                # and self.event.message.startswith('kkp')
+                and self.event.message_type == 'group'
         )

@@ -43,6 +43,7 @@ class GetForwardInfo(Plugin[GroupMessageEvent, int, None]):
                 and self.event.type == "message"
                 and self.event.message.endswith('获取详细信息')
                 and 'reply' in self.event.message
+                and self.event.message_type == 'group'
         )
 
     @staticmethod

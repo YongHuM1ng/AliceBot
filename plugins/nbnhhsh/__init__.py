@@ -15,12 +15,11 @@ class Nbnhhsh(Plugin[GroupMessageEvent, int, None]):
             await self.event.reply(msg)
 
     async def rule(self) -> bool:
-        self.res = re.search(r'^\s*(?P<text>[a-zA-Z0-9]+)是(什么|甚么|啥|？|\?)', str(self.event.message))
-        return (
-                self.event.adapter.name == "cqhttp"
-                and self.event.type == "message"
-                and self.res
-        )
+        if self.event.adapter.name == "cqhttp" and self.event.type == "message" and self.event.message_type == 'group':
+            self.res = re.search(r'^\s*(?P<text>[a-zA-Z0-9]+)是(什么|甚么|啥|？|\?)', str(self.event.message))
+            return self.res and True
+        else:
+            return False
 
     @staticmethod
     async def query(text: str) -> str:

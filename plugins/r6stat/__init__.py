@@ -90,6 +90,7 @@ class R6Stat(Plugin[GroupMessageEvent, int, None]):
                 self.event.adapter.name == 'cqhttp'
                 and self.event.type == 'message'
                 and self.event.message.startswith('R6')
+                and self.event.message_type == 'group'
         )
 
     @staticmethod
